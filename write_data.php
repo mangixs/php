@@ -1,8 +1,10 @@
 <?php
+define('INDEXPATH',dirname(__FILE__));
 class write_data{
 	public function __construct(){
+
 	}
-	
+
 	public function php_data($file,$name,$data){
 		$file=$this->create_path($file);
 		$fp=fopen($file.'/'.$name.'.php','w+');
