@@ -4,7 +4,6 @@ class write_data{
 	public function __construct(){
 
 	}
-
 	public function php_data($file,$name,$data){
 		$file=$this->create_path($file);
 		$fp=fopen($file.'/'.$name.'.php','w+');
@@ -31,7 +30,6 @@ class write_data{
 		fwrite($fp,$content);
 		fclose($fp);
 	}
-	
 	public function html_data($file,$name,$data){
 		$file=$this->create_path($file);
 		$fp=fopen($file.'/'.$name.'.php','w+');
