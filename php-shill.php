@@ -31,3 +31,34 @@ php 系统函数 get_browser() 函数，这个函数将会返回用户浏览器�
 
 header()函数是PHP中进行页面跳转的一种十分简单的方法。
 header("Location: http://www.***.com");
+
+<?php
+/**
+ * 删除目录及目录下所有文件或删除指定文件
+ * @param str $path   待删除目录路径
+ * @param int $delDir 是否删除目录，1或true删除目录，0或false则只删除文件保留目录（包含子目录）
+ * @return bool 返回删除状态
+ */
+public function delDirAndFile($path, $delDir = FALSE) {
+    if ( !file_exists($path) ) {
+        return;
+    }
+    $handle = opendir($path);
+    if ($handle) {
+        while (false !== ( $item = readdir($handle) )) {
+            if ($item != "." && $item != ".."){
+                is_dir("$path/$item") ? $this->delDirAndFile("$path/$item", $delDir) : unlink("$path/$item");
+            }
+        }
+        closedir($handle);
+        if ($delDir){
+            return rmdir($path);
+        }
+    }else {
+        if (file_exists($path)) {
+            return unlink($path);
+        } else {
+            return FALSE;
+        }
+    }
+}
