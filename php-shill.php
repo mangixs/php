@@ -7,6 +7,7 @@ date()格式化一个本地时间
 strtotime() 函数将任何英文文本的日期时间描述解析为 Unix 时间戳。
 header() 函数向客户端发送原始的 HTTP 报头。
 explode() — 使用一个字符串分割另一个字符串
+implode() - 使用一个字符窜组合一个数组
 strtolower — 将字符串转化为小写
 ob_start — 打开输出控制缓冲
 var_export — 输出或返回一个变量的字符串表示
@@ -26,6 +27,7 @@ strrchr() - 查找指定字符在字符串中的最后一次出现
 stripos() - 查找字符串首次出现的位置（不区分大小写）
 strpbrk() - 在字符串中查找一组字符的任何一个字符
 preg_match() - 执行一个正则表达式匹配
+array_column($arr,val) - 在二维数组arr将键值为val的值添加到一个数组
 empty(var) 当var存在，并且是一个非空非零的值时返回 FALSE  否则返回 TRUE.
 php 系统函数 get_browser() 函数，这个函数将会返回用户浏览器的一些性能数据。
 
