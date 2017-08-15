@@ -64,6 +64,9 @@ public function delDirAndFile($path, $delDir = FALSE) {
         }
     }
 }
+/**
+*获取客户端ip地址  http://rainmeter.cn/cms/
+*/
 public function ip() {
     //strcasecmp 比较两个字符，不区分大小写。返回0，>0，<0。
     if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
