@@ -42,3 +42,6 @@ function passport_key($str,$encrypt_key){
     }
     return $tmp;
 }
+/*
+http://www.nlc.gov.cn/ 中国国家图书馆  http://www.egouz.com/ 网站分类
+ */
