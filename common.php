@@ -77,3 +77,48 @@ function XMLtoArray($xml){
 	$ret=json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)),true);
 	return $ret;
 }
+/**
+*获取客户端ip地址  http://rainmeter.cn/cms/
+*/
+function ip() {
+    //strcasecmp 比较两个字符，不区分大小写。返回0，>0，<0。
+    if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+        $ip = getenv('HTTP_CLIENT_IP');
+    } elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+        $ip = getenv('HTTP_X_FORWARDED_FOR');
+    } elseif(getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+        $ip = getenv('REMOTE_ADDR');
+    } elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    $res =  preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
+    return $res;
+}
+/** 删除目录及目录下所有文件或删除指定文件
+ * @param str $path   待删除目录路径
+ * @param int $delDir 是否删除目录，1或true删除目录，0或false则只删除文件保留目录（包含子目录）
+ * @return bool 返回删除状态 
+ */
+function delDirAndFile($path, $delDir = FALSE) {
+	if ( !file_exists($path) ) {
+		return;
+	}
+    $handle = opendir($path);
+    if ($handle) {
+        while (false !== ( $item = readdir($handle) )) {
+            if ($item != "." && $item != ".."){
+                is_dir("$path/$item") ? $this->delDirAndFile("$path/$item", $delDir) : unlink("$path/$item");
+            }
+        }
+        closedir($handle);
+        if ($delDir){
+            return rmdir($path);
+        }
+    }else {
+        if (file_exists($path)) {
+            return unlink($path);
+        } else {
+            return FALSE;
+        }
+    }
+}
