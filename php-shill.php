@@ -81,3 +81,9 @@ public function ip() {
     $res =  preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
     echo $res;
 }
+
+获取中英文字符串长度
+$str = '大家好abc';
+echo strlen($str);
+echo '<br/>';
+echo mb_strlen($str,'utf-8');
