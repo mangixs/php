@@ -138,3 +138,368 @@ function get_current_url(){
     } 
     return $current_url; 
 }
+/**
+ * 页面地址跳转
+ * @param type $url 目标地址
+ * @param type $name 倒计时
+ * @return type
+ */
+function redirect($url, $time = 0) {
+    if (!headers_sent()) {
+        if (0 === $time) {
+            header('Location: ' . $url);
+        } else {
+            header("refresh:{$time};url={$url}");
+        }
+        exit();
+    } else {
+        $str    = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
+        exit($str);
+    }
+}
+
+/**
+ * xss过滤函数
+ *
+ * @param $string
+ * @return string
+ */
+function remove_xss($string) {
+    $string = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S', '', $string);
+    $parm1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base');
+    $parm2 = Array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+    $parm = array_merge($parm1, $parm2);
+
+    for ($i = 0; $i < sizeof($parm); $i++) {
+        $pattern = '/';
+        for ($j = 0; $j < strlen($parm[$i]); $j++) {
+            if ($j > 0) {
+                $pattern .= '(';
+                $pattern .= '(&#[x|X]0([9][a][b]);?)?';
+                $pattern .= '|(&#0([9][10][13]);?)?';
+                $pattern .= ')?';
+            }
+            $pattern .= $parm[$i][$j];
+        }
+        $pattern .= '/i';
+        $string = preg_replace($pattern, '', $string);
+    }
+    return $string;
+}
+/**
+ * 判断是否SSL协议
+ * @return boolean
+ */
+function is_ssl() {
+    if(isset($_SERVER['HTTPS']) && ('1' == $_SERVER['HTTPS'] || 'on' == strtolower($_SERVER['HTTPS']))){
+        return true;
+    }elseif(isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'] )) {
+        return true;
+    }
+    return false;
+}
+/**
+ * 随机字符串
+ * @param int $length 长度
+ * @param int $numeric 类型(0：混合；1：纯数字)
+ * @return string
+ */
+function random($length, $numeric = 0) {
+     $seed = base_convert(md5(microtime().$_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
+     $seed = $numeric ? (str_replace('0', '', $seed).'012340567890') : ($seed.'zZ'.strtoupper($seed));
+     if($numeric) {
+          $hash = '';
+     } else {
+          $hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
+          $length--;
+     }
+     $max = strlen($seed) - 1;
+     for($i = 0; $i < $length; $i++) {
+          $hash .= $seed{mt_rand(0, $max)};
+     }
+     return $hash;
+}
+/**
+ * 格式化金额
+ * @param type $money
+ * @return type
+ */
+function money($money, $str = ',') {
+    return number_format($money, 2, '.', $str);
+}
+/**
+ * 数组转XML
+ * @param array $arr
+ * @param boolean $htmlon
+ * @param boolean $isnormal
+ * @param intval $level
+ * @return type
+ */
+function array2xml($arr, $htmlon = TRUE, $isnormal = FALSE, $level = 1) {
+    $s = $level == 1 ? "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\r\n<root>\r\n" : '';
+    $space = str_repeat("\t", $level);
+    foreach($arr as $k => $v) {
+        if(!is_array($v)) {
+            $s .= $space."<item id=\"$k\">".($htmlon ? '<![CDATA[' : '').$v.($htmlon ? ']]>' : '')."</item>\r\n";
+        } else {
+            $s .= $space."<item id=\"$k\">\r\n".array2xml($v, $htmlon, $isnormal, $level + 1).$space."</item>\r\n";
+        }
+    }
+    $s = preg_replace("/([\x01-\x08\x0b-\x0c\x0e-\x1f])+/", ' ', $s);
+    return $level == 1 ? $s."</root>" : $s;
+}
+
+/**
+ * 电子邮箱格式判断
+ * @param  string $email 字符串
+ * @return boolean
+ */
+function is_email($email) {
+     if (!empty($email)) {
+          return preg_match('/^[a-z0-9]+([\+_\-\.]?[a-z0-9]+)*@([a-z0-9]+[\-]?[a-z0-9]+\.)+[a-z]{2,6}$/i', $email);
+     }
+     return FALSE;
+}
+
+/**
+ * 手机号码格式判断
+ * @param string $string
+ * @return boolean
+ */
+function is_mobile($string){
+     if (!empty($string)) {
+          return preg_match('/^1[3|4|5|7|8][0-9]\d{8}$/', $string);
+     }
+     return FALSE;
+}
+
+/**
+ * 邮政编码格式判断
+ * @param string $string
+ * @return boolean
+ */
+function is_zipcode($string){
+     if (!empty($string)) {
+          return preg_match('/^[0-9][0-9]{5}$/', $string);
+     }
+     return FALSE;
+}
+
+/**
+ * 缩略图生成
+ * @param sting $src
+ * @param intval $width
+ * @param intval $height
+ * @param boolean $replace
+ * @return string
+ */
+function thumb($src = '', $width = 500, $height = 500, $replace = false) {
+    if(is_file($src) && file_exists($src)) {
+        $ext = pathinfo($src, PATHINFO_EXTENSION);
+        $name = basename($src, '.'.$ext);
+        $dir = dirname($src);
+        $setting = model('admin/setting','service')->get();
+        if(in_array($ext, array('gif','jpg','jpeg','bmp','png'))) {
+            $name = $name.'_thumb_'.$width.'_'.$height.'.'.$ext;
+            $file = $dir.'/'.$name;
+            if(!file_exists($file) || $replace == TRUE) {
+                $image = new image($src);
+                $image->thumb($width, $height, isset($setting['attach_thumb'])?$setting['attach_thumb']:1);
+                $image->save($file);
+            }
+            return $file;
+        }
+    }
+    return $src;
+}
+
+/**
+ * 多维数组合并（支持多数组）
+ * @return array
+ */
+function array_merge_multi () {
+    $args = func_get_args();
+    $array = array();
+    foreach ( $args as $arg ) {
+        if ( is_array($arg) ) {
+            foreach ( $arg as $k => $v ) {
+                if ( is_array($v) ) {
+                    $array[$k] = isset($array[$k]) ? $array[$k] : array();
+                    $array[$k] = array_merge_multi($array[$k], $v);
+                } else {
+                    $array[$k] = $v;
+                }
+            }
+        }
+    }
+    return $array;
+}
+/**
+ * 生成订单号
+ */
+function build_order_no($suffix = 'o') {
+    return $suffix.date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+}
+
+/**
+ * 对多位数组进行排序
+ * @param $multi_array 数组
+ * @param $sort_key需要传入的键名
+ * @param $sort排序类型
+ */
+function multi_array_sort($multi_array, $sort_key, $sort = SORT_DESC) {
+    if (is_array($multi_array)) {
+        foreach ($multi_array as $row_array) {
+            if (is_array($row_array)) {
+                $key_array[] = $row_array[$sort_key];
+            } else {
+                return FALSE;
+            }
+        }
+    } else {
+        return FALSE;
+    }
+        array_multisort($key_array, $sort, $multi_array);
+        return $multi_array;
+}
+/**
+ * 加密字符串
+ * @param string $str 字符串
+ * @param string $key 加密key
+ * @return string
+ */
+function encrypt($data,$key = '',$expire = 0) {
+    $expire = sprintf('%010d', $expire ? $expire + time():0);
+    $key = md5($key != '' ? $key : config('authkey'));
+    $data = base64_encode($expire.$data);
+    $x    = 0;
+    $len  = strlen($data);
+    $l    = strlen($key);
+    $char = $str    =   '';
+
+    for ($i = 0; $i < $len; $i++) {
+        if ($x == $l) $x = 0;
+        $char .= substr($key, $x, 1);
+        $x++;
+    }
+
+    for ($i = 0; $i < $len; $i++) {
+        $str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1)))%256);
+    }
+    return str_replace(array('+','/','='),array('-','_',''),base64_encode($str));
+}
+
+/**
+ * 解密字符串
+ * @param string $str 字符串
+ * @param string $key 加密key
+ * @return string
+ */
+function decrypt($data,$key = '') {
+    $key = md5($key != '' ? $key : config('authkey'));
+    $data   = str_replace(array('-','_'),array('+','/'),$data);
+    $mod4   = strlen($data) % 4;
+    if ($mod4) {
+       $data .= substr('====', $mod4);
+    }
+    $data   = base64_decode($data);
+
+    $x      = 0;
+    $len    = strlen($data);
+    $l      = strlen($key);
+    $char   = $str = '';
+
+    for ($i = 0; $i < $len; $i++) {
+        if ($x == $l) $x = 0;
+        $char .= substr($key, $x, 1);
+        $x++;
+    }
+
+    for ($i = 0; $i < $len; $i++) {
+        if (ord(substr($data, $i, 1))<ord(substr($char, $i, 1))) {
+            $str .= chr((ord(substr($data, $i, 1)) + 256) - ord(substr($char, $i, 1)));
+        }else{
+            $str .= chr(ord(substr($data, $i, 1)) - ord(substr($char, $i, 1)));
+        }
+    }
+    $data   = base64_decode($str);
+    $expire = substr($data,0,10);
+    if($expire > 0 && $expire < time()) {
+        return '';
+    }
+    $data   = substr($data,10);
+    return $data;
+}
+/**
+ * 生成目录
+ * @param  string  $path 目录
+ * @param  integer $mode 权限
+ * @return boolean
+ */
+function create($path, $mode = 0777) {
+    if(is_dir($path)) return TRUE;
+    $path = str_replace("\\", "/", $path);
+    if(substr($path, -1) != '/') $path = $path.'/';
+    $temp = explode('/', $path);
+    $cur_dir = '';
+    $max = count($temp) - 1;
+    for($i=0; $i<$max; $i++) {
+        $cur_dir .= $temp[$i].'/';
+        if (@is_dir($cur_dir)) continue;
+        @mkdir($cur_dir, 0777,true);
+        @chmod($cur_dir, 0777);
+    }
+    return is_dir($path);
+}
+/**
+  +----------------------------------------------------------
+ * 取得目录下面的文件信息
+  +----------------------------------------------------------
+ * @access public
+  +----------------------------------------------------------
+ * @param mixed $pathname 路径
+  +----------------------------------------------------------
+ */
+function listFile($pathname, $pattern = '*') {
+    static $_listDirs = array();
+    $guid = md5($pathname . $pattern);
+    if (!isset($_listDirs[$guid])) {
+        $dir = array();
+        $list = glob($pathname . $pattern);
+        foreach ($list as $i => $file) {
+            //$dir[$i]['filename']    = basename($file);
+            //basename取中文名出问题.改用此方法
+            //编码转换.把中文的调整一下.
+            $dir[$i]['filename'] = preg_replace('/^.+[\\\\\\/]/', '', $file);
+            $dir[$i]['pathname'] = realpath($file);
+            $dir[$i]['owner'] = fileowner($file);
+            $dir[$i]['perms'] = fileperms($file);
+            $dir[$i]['inode'] = fileinode($file);
+            $dir[$i]['group'] = filegroup($file);
+            $dir[$i]['path'] = dirname($file);
+            $dir[$i]['atime'] = fileatime($file);
+            $dir[$i]['ctime'] = filectime($file);
+            $dir[$i]['size'] = filesize($file);
+            $dir[$i]['type'] = filetype($file);
+            $dir[$i]['ext'] = is_file($file) ? strtolower(substr(strrchr(basename($file), '.'), 1)) : '';
+            $dir[$i]['mtime'] = filemtime($file);
+            $dir[$i]['isDir'] = is_dir($file);
+            $dir[$i]['isFile'] = is_file($file);
+            $dir[$i]['isLink'] = is_link($file);
+            //$dir[$i]['isExecutable']= function_exists('is_executable')?is_executable($file):'';
+            $dir[$i]['isReadable'] = is_readable($file);
+            $dir[$i]['isWritable'] = is_writable($file);
+        }
+        $cmp_func = create_function('$a,$b', '
+        $k  =  "isDir";
+        if($a[$k]  ==  $b[$k])  return  0;
+        return  $a[$k]>$b[$k]?-1:1;
+        ');
+        // 对结果排序 保证目录在前面
+        usort($dir, $cmp_func);
+        $this->_values = $dir;
+        $_listDirs[$guid] = $dir;
+    } else {
+        $this->_values = $_listDirs[$guid];
+    }
+}
