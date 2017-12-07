@@ -3,3 +3,7 @@
 #http://www.yiibai.com/git/git_push.html
 #这里测试git的分支、、
 #git push orign mareer
+向git推送更新
+git pull origin master 
+从git拉取最新的更新
+  
