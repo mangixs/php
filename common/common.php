@@ -611,3 +611,31 @@ function ip() {
     $res =  preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
     return $res;
 }
+/**
+ * 将字符串参数变为数组
+ * @param $query
+ * @return array 
+ * 
+ */
+function convertUrlQuery($query){
+    $queryParts = explode('&', $query);
+    $params = array();
+    foreach ($queryParts as $param) {
+        $item = explode('=', $param);
+        $params[$item[0]] = $item[1];
+    }
+    return $params;
+}
+/**
+ * 将参数变为字符串
+ * @param $array_query
+ * @return string string 'm=content&c=index&a=lists&catid=6&area=0&author=0&h=0®ion=0&s=1&page=1'
+ */
+function getUrlQuery($array_query){
+    $tmp = array();
+    foreach($array_query as $k=>$param){
+        $tmp[] = $k.'='.$param;
+    }
+    $params = implode('&',$tmp);
+    return $params;
+}
