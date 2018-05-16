@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**$_SERVER['REMOTE_ADDR'];
  * 常见的排序算法:冒泡排序法、快速排序法、简单选择排序法、
  * 堆排序法、直接插入排序法、希尔排序法、合并排序法。
@@ -9,52 +9,74 @@
  * @param  [type] $arr [description]
  * @return [type]      [description]
  */
-function mysort($arr){
-	for ($i=0; $i < count($arr); $i++) { 
-		for ($j=0; $j < count($arr)-1 ; $j++) { 
-			if ( $arr[$j] > $arr[ $j +1 ]) {
-				$tmp=$arr[$j];
-				$arr[$j]=$arr[$j+1];
-				$arr[$j+1]=$tmp;
-			}
-		}
-	}
-	return $arr;
+function mysort($arr) {
+    for ($i = 0; $i < count($arr); $i++) {
+        for ($j = 0; $j < count($arr) - 1; $j++) {
+            if ($arr[$j] > $arr[$j + 1]) {
+                $tmp         = $arr[$j];
+                $arr[$j]     = $arr[$j + 1];
+                $arr[$j + 1] = $tmp;
+            }
+        }
+    }
+    return $arr;
 }
 //二维数组排序， $arr是数据，$keys是排序的健值，$order是排序规则，1是升序，0是降序
-function array_sort($arr,$key,$sort_ordre=SORT_ASC,$sort_type=SORT_NUMERIC){
-	if ( is_array($arr) ) {
-		foreach ($arr as $v) {
-			if ( is_array($v) ) {
-				$key_arrays[]=$v[ $key ];
-			}else{
-				return false;
-			}
-		}
-	}else{
-		return false;
-	}
-	array_multisort($key_arrays,$sort_order,$sort_type,$arr);
-	return $arr;
+function array_sort($arr, $key, $sort_ordre = SORT_ASC, $sort_type = SORT_NUMERIC) {
+    if (is_array($arr)) {
+        foreach ($arr as $v) {
+            if (is_array($v)) {
+                $key_arrays[] = $v[$key];
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+    array_multisort($key_arrays, $sort_order, $sort_type, $arr);
+    return $arr;
 }
 //顺序排序
-function shunxu($arr){
-	$count=count($arr);
-	for ($i=0; $i < $count-1; ++$i) { 
-		$p=$i;
-		for ($j=0; $j < $count ; ++$j) { 
-			$p=$arr[$p]>$arr[$j]?$j:$p;
-		}
-		if ( $p != $i ) {
-			$tmp=$arr[ $i ];
-			$arr[ $i ]=$arr[ $p ];
-			$arr[ $p ]=$tmp;
-		}
-	}
-	return $arr;
-}  
+function shunxu($arr) {
+    $count = count($arr);
+    for ($i = 0; $i < $count - 1; ++$i) {
+        $p = $i;
+        for ($j = 0; $j < $count; ++$j) {
+            $p = $arr[$p] > $arr[$j] ? $j : $p;
+        }
+        if ($p != $i) {
+            $tmp     = $arr[$i];
+            $arr[$i] = $arr[$p];
+            $arr[$p] = $tmp;
+        }
+    }
+    return $arr;
+}
 //获取文件扩展名
-function ext($path){
-	$arr=explode('.',$path);
-	return $arr[ $count($arr)-1 ];
+function ext($path) {
+    $arr = explode('.', $path);
+    return $arr[$count($arr) - 1];
+}
+//快速排序快速排序：
+// 通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列
+function quickSort(&$arr) {
+    if (count($arr) > 1) {
+        $k     = $arr[0];
+        $x     = array();
+        $y     = array();
+        $_size = count($arr);
+        for ($i = 1; $i < $_size; $i++) {
+            if ($arr[$i] <= $k) {
+                $x[] = $arr[$i];
+            } elseif ($arr[$i] > $k) {
+                $y[] = $arr[$i];
+            }
+        }
+        $x = quickSort($x);
+        $y = quickSort($y);
+        return array_merge($x, array($k), $y);
+    } else {
+        return $arr;
+    }
 }

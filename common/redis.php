@@ -36,8 +36,8 @@ class Myredis {
      * @param string $key 集合Y名称
      * @param string|array $value  值
      */
-    public function sadd($key,$value){
-        return $this->redis->sadd($key,$value);
+    public function sadd($key, $value) {
+        return $this->redis->sadd($key, $value);
     }
 
     /*
@@ -45,15 +45,15 @@ class Myredis {
      * @param string $key 集合名称
      * @param string|array $value  值
      */
-    public function zadd($key,$value){
-        return $this->redis->zadd($key,$value);
+    public function zadd($key, $value) {
+        return $this->redis->zadd($key, $value);
     }
 
     /**
      * 取集合对应元素
      * @param string $setName 集合名字
      */
-    public function smembers($setName){
+    public function smembers($setName) {
         return $this->redis->smembers($setName);
     }
 
@@ -62,9 +62,9 @@ class Myredis {
      * @param sting $key KEY名称
      * @param string $value 值
      */
-    public function lpush($key,$value){
+    public function lpush($key, $value) {
         echo "$key - $value \n";
-        return $this->redis->LPUSH($key,$value);
+        return $this->redis->LPUSH($key, $value);
     }
 
     /**
@@ -72,9 +72,9 @@ class Myredis {
      * @param sting $key KEY名称
      * @param string $value 值
      */
-    public function rpush($key,$value){
+    public function rpush($key, $value) {
         echo "$key - $value \n";
-        return $this->redis->rpush($key,$value);
+        return $this->redis->rpush($key, $value);
     }
     /**
      * 获取所有列表数据（从头到尾取）
@@ -82,10 +82,9 @@ class Myredis {
      * @param int $head  开始
      * @param int $tail     结束
      */
-    public function lranges($key,$head,$tail){
-        return $this->redis->lrange($key,$head,$tail);
+    public function lranges($key, $head, $tail) {
+        return $this->redis->lrange($key, $head, $tail);
     }
-
 
     /**
      * 设置多个值
@@ -112,11 +111,10 @@ class Myredis {
      * @param string $key KEY名称
      */
     public function get($key) {
-        $result=$this->redis->get($key);
-        if(empty($result)){
+        $result = $this->redis->get($key);
+        if (empty($result)) {
             return false;
-        }
-        else{
+        } else {
             return $result;
         }
     }
@@ -127,11 +125,10 @@ class Myredis {
      */
     public function gets($keyArray) {
         if (is_array($keyArray)) {
-            $result=$this->redis->mget($keyArray);
-            if(empty($result)){
+            $result = $this->redis->mget($keyArray);
+            if (empty($result)) {
                 return false;
-            }
-            else{
+            } else {
                 return $result;
             }
         } else {
@@ -151,11 +148,10 @@ class Myredis {
      * @param string $key 删除KEY的名称
      */
     public function del($key) {
-        $result=$this->redis->delete($key);
-        if($result){
+        $result = $this->redis->delete($key);
+        if ($result) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
@@ -166,11 +162,10 @@ class Myredis {
      */
     public function dels($keyArray) {
         if (is_array($keyArray)) {
-            $result=$this->redis->del($keyArray);
-            if($result){
+            $result = $this->redis->del($keyArray);
+            if ($result) {
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
         } else {
@@ -198,7 +193,7 @@ class Myredis {
      * 判断key是否存在
      * @param string $key KEY名称
      */
-    public function isExists($key){
+    public function isExists($key) {
         return $this->redis->exists($key);
     }
     /**

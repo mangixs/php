@@ -16,10 +16,10 @@ array_intersect(array $array1 , array $array2 [, array $ ... ] ) 返回一个数
 final 关键字。如果父类中的方法被声明为 final，则子类无法覆盖该方法。如果一个类被声明为 final，则不能被继承。
 
 
-1. UNIX时间戳转换为日期用函数： date() 
-一般形式：date('Y-m-d H:i:s', 1156219870); 
-2. 日期转换为UNIX时间戳用函数：strtotime() 
-一般形式：strtotime('2010-03-24 08:15:42')； 
+1. UNIX时间戳转换为日期用函数： date()
+一般形式：date('Y-m-d H:i:s', 1156219870);
+2. 日期转换为UNIX时间戳用函数：strtotime()
+一般形式：strtotime('2010-03-24 08:15:42')；
 
 
 strstr() - 查找字符串的首次出现
@@ -39,7 +39,7 @@ header("Location: http://www.***.com"); -->
 $str = '大家好abc';
 echo strlen($str);
 echo '<br/>';
-echo mb_strlen($str,'utf-8');
+echo mb_strlen($str, 'utf-8');
 
 //ajax跨域
 header('Access-Control-Allow-Origin:*');
