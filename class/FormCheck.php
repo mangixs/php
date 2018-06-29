@@ -35,6 +35,10 @@ class FormCheck
     {
         $this->set_check($set);
     }
+    public function __set($key, $val)
+    {
+        $this->__params[$key] = $val;
+    }
     protected function set_check($sets)
     {
         foreach ($sets as $skey => $set) {

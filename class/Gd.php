@@ -575,4 +575,7 @@ class Gd
     {
         empty($this->img) || imagedestroy($this->img);
     }
+    public function createPng(){
+        
+    }
 }
