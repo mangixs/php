@@ -100,15 +100,11 @@ class Transfers
         //https请求 不验证证书和host
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        //第一种方法，cert 与 key 分别属于两个.pem文件
-        //默认格式为PEM，可以注释
         curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'PEM');
         curl_setopt($ch, CURLOPT_SSLCERT, $this->cretPath);
         //默认格式为PEM，可以注释
         curl_setopt($ch, CURLOPT_SSLKEYTYPE, 'PEM');
         curl_setopt($ch, CURLOPT_SSLKEY, $this->keyPath);
-        //第二种方式，两个文件合成一个.pem文件
-        //        curl_setopt($ch,CURLOPT_SSLCERT,getcwd().'/all.pem');
         $data = curl_exec($ch);
         if ($data === false) {
             echo 'Curl error: ' . curl_error($ch);exit();
