@@ -13,8 +13,8 @@ class Wxpay
     ];
     public function init($appId, $mchId, $mchKey)
     {
-        $this->appId = $appId;
-        $this->mchId = $mchId;
+        $this->appId  = $appId;
+        $this->mchId  = $mchId;
         $this->mchKey = $mchKey;
     }
     public function __set($key, $val)
@@ -50,11 +50,11 @@ class Wxpay
         if ($this->values['trade_type'] == 'NATIVE' and empty($this->values['product_id'])) {
             return ['result' => 'ERROR', 'msg' => '在trade_type为NATIVE，缺少参数out_trade_no'];
         }
-        $this->values['appid'] = $this->appId;
-        $this->values['mch_id'] = $this->mchId;
+        $this->values['appid']            = $this->appId;
+        $this->values['mch_id']           = $this->mchId;
         $this->values['spbill_create_ip'] = $_SERVER['REMOTE_ADDR'];
-        $this->values['nonce_str'] = $this->randStr(32);
-        $this->mode = 'jsapi';
+        $this->values['nonce_str']        = $this->randStr(32);
+        $this->mode                       = 'jsapi';
         return ['result' => 'SUCCESS'];
     }
     public function sign($key = 'sign')
@@ -93,7 +93,7 @@ class Wxpay
     public function postXML($config, $useCert = false, $second = 30)
     {
         $url = $this->url[$this->mode];
-        $ch = curl_init();
+        $ch  = curl_init();
         curl_setopt($ch, CURLOPT_TIMEOUT, $second);
 
         if ($config->CURL_PROXY_HOST != '0.0.0.0' and !empty($config->CURL_PROXY_HOST)) {
@@ -127,20 +127,20 @@ class Wxpay
             curl_close($ch);
             $ret = ['result' => 'error', 'msg' => "curl出现错误{$errno},{$error}"];
         }
-        $this->values = [];
-        $this->values['appId'] = $data['appid'];
+        $this->values              = [];
+        $this->values['appId']     = $data['appid'];
         $this->values['timeStamp'] = time();
-        $this->values['nonceStr'] = $this->randStr(32);
-        $this->values['package'] = 'prepay_id=' . $data['prepay_id'];
-        $this->values['signType'] = 'MD5';
+        $this->values['nonceStr']  = $this->randStr(32);
+        $this->values['package']   = 'prepay_id=' . $data['prepay_id'];
+        $this->values['signType']  = 'MD5';
         $this->sign('paySign');
         return ['result' => 'SUCCESS',
-            'data' => $this->values,
+            'data'           => $this->values,
         ];
     }
     protected function randStr($len = 10)
     {
-        $str = array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm');
+        $str  = array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm');
         $last = count($str) - 1;
         $rand = '';
         for ($i = 0; $i < $len; $i++) {

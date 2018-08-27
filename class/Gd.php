@@ -43,10 +43,10 @@ class Gd
 
         //设置图像信息
         $this->info = array(
-            'width' => $info[0],
+            'width'  => $info[0],
             'height' => $info[1],
-            'type' => image_type_to_extension($info[2], false),
-            'mime' => $info['mime'],
+            'type'   => image_type_to_extension($info[2], false),
+            'mime'   => $info['mime'],
         );
 
         //销毁已存在的图像
@@ -54,11 +54,11 @@ class Gd
 
         //打开图像
         if ('gif' == $this->info['type']) {
-            $class = 'Think\\Image\\Driver\\GIF';
+            $class     = 'Think\\Image\\Driver\\GIF';
             $this->gif = new $class($imgname);
             $this->img = imagecreatefromstring($this->gif->image());
         } else {
-            $fun = "imagecreatefrom{$this->info['type']}";
+            $fun       = "imagecreatefrom{$this->info['type']}";
             $this->img = $fun($imgname);
         }
     }
@@ -176,7 +176,7 @@ class Gd
         }
 
         //设置保存尺寸
-        empty($width) && $width = $w;
+        empty($width) && $width   = $w;
         empty($height) && $height = $h;
 
         do {
@@ -194,7 +194,7 @@ class Gd
             $this->img = $img;
         } while (!empty($this->gif) && $this->gifNext());
 
-        $this->info['width'] = $width;
+        $this->info['width']  = $width;
         $this->info['height'] = $height;
     }
 
@@ -227,8 +227,8 @@ class Gd
                 $scale = min($width / $w, $height / $h);
 
                 //设置缩略图的坐标及宽度和高度
-                $x = $y = 0;
-                $width = $w * $scale;
+                $x      = $y      = 0;
+                $width  = $w * $scale;
                 $height = $h * $scale;
                 break;
 
@@ -295,7 +295,7 @@ class Gd
                     $this->img = $img;
                 } while (!empty($this->gif) && $this->gifNext());
 
-                $this->info['width'] = $width;
+                $this->info['width']  = $width;
                 $this->info['height'] = $height;
                 return;
 
@@ -336,7 +336,7 @@ class Gd
         }
 
         //创建水印图像资源
-        $fun = 'imagecreatefrom' . image_type_to_extension($info[2], false);
+        $fun   = 'imagecreatefrom' . image_type_to_extension($info[2], false);
         $water = $fun($source);
 
         //设定水印图像的混色模式
@@ -523,11 +523,11 @@ class Gd
 
         /* 设置偏移量 */
         if (is_array($offset)) {
-            $offset = array_map('intval', $offset);
+            $offset        = array_map('intval', $offset);
             list($ox, $oy) = $offset;
         } else {
             $offset = intval($offset);
-            $ox = $oy = $offset;
+            $ox     = $oy     = $offset;
         }
 
         /* 设置颜色 */
@@ -575,7 +575,8 @@ class Gd
     {
         empty($this->img) || imagedestroy($this->img);
     }
-    public function createPng(){
-        
+    public function createPng()
+    {
+
     }
 }

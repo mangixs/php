@@ -9,9 +9,10 @@
  * @param  [type] $arr [description]
  * @return [type]      [description]
  */
-function mysort($arr) {
+function mysort($arr)
+{
     for ($i = 0; $i < count($arr); $i++) {
-        for ($j = 0; $j < count($arr) - 1; $j++) {
+        for ($j = 0; $j < count($arr) - $i; $j++) {
             if ($arr[$j] > $arr[$j + 1]) {
                 $tmp         = $arr[$j];
                 $arr[$j]     = $arr[$j + 1];
@@ -22,7 +23,8 @@ function mysort($arr) {
     return $arr;
 }
 //二维数组排序， $arr是数据，$keys是排序的健值，$order是排序规则，1是升序，0是降序
-function array_sort($arr, $key, $sort_ordre = SORT_ASC, $sort_type = SORT_NUMERIC) {
+function array_sort($arr, $key, $sort_ordre = SORT_ASC, $sort_type = SORT_NUMERIC)
+{
     if (is_array($arr)) {
         foreach ($arr as $v) {
             if (is_array($v)) {
@@ -38,7 +40,8 @@ function array_sort($arr, $key, $sort_ordre = SORT_ASC, $sort_type = SORT_NUMERI
     return $arr;
 }
 //顺序排序
-function shunxu($arr) {
+function shunxu($arr)
+{
     $count = count($arr);
     for ($i = 0; $i < $count - 1; ++$i) {
         $p = $i;
@@ -54,13 +57,15 @@ function shunxu($arr) {
     return $arr;
 }
 //获取文件扩展名
-function ext($path) {
+function ext($path)
+{
     $arr = explode('.', $path);
-    return $arr[$count($arr) - 1];
+    return $arr[count($arr) - 1];
 }
 //快速排序快速排序：
 // 通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列
-function quickSort(&$arr) {
+function quickSort($arr)
+{
     if (count($arr) > 1) {
         $k     = $arr[0];
         $x     = array();
@@ -79,4 +84,19 @@ function quickSort(&$arr) {
     } else {
         return $arr;
     }
+}
+//二分查找法
+function twoSort($arr, $low, $hight, $k)
+{
+    if ($low <= $hight) {
+        $mid = intval(($low + $hight) / 2);
+        if ($arr[$mid] == $k) {
+            return true;
+        } else if ($k < $arr[$mid]) {
+            return twoSort($arr, $low, $mid - 1, $k);
+        } else {
+            return towSort($arr, $low, $mid + 1, $k);
+        }
+    }
+    return false;
 }
